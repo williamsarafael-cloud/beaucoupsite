@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { about, site, founder } from '../data/site';
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'AboutPage', name: 'About Beaucoup Consulting', url: `${site.url}/about`,
+  mainEntity: { '@type': 'Organization', name: site.name, url: site.url },
+}];
+---
+<Base
+  title="About Our HR Consulting Firm"
+  description="Beaucoup Consulting transforms workplace cultures and drives strategic people operations for startups and high-growth companies. Meet founder Rafael Williams."
+  path="/about"
+  schema={schema}
+>
+  <section class="container page-hero">
+    <div class="eyebrow">About</div>
+    <h1>{about.h1}</h1>
+  </section>
+
+  <section class="container section" style="padding-top:0">
+    <div class="split">
+      <h2 class="a">Who We Are</h2>
+      <div class="b"><p>{about.whoWeAre}</p></div>
+    </div>
+  </section>
+
+  <section class="mint section">
+    <div class="container split">
+      <h2 class="a">Our Impact</h2>
+      <div class="b"><p>{about.ourImpact}</p></div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="eyebrow">Why Consulting, Why Now</div>
+    <p class="quote" style="margin-top:16px">{about.whyNowQuote}</p>
+    <div class="prose" style="margin-top:32px">
+      {about.whyNow.map((p) => <p class="copy">{p}</p>)}
+    </div>
+  </section>
+
+  <section class="founder section">
+    <div class="container">
+      <div class="eyebrow">Founder</div>
+      <h2 style="margin:12px 0 20px">{founder.name}</h2>
+      <p class="copy" style="max-width:760px">{founder.bio[0]}</p>
+      <a class="btn btn-outline" href="/about/rafael-williams">Read Rafael’s story</a>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services, site } from '../../data/site';
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'Beaucoup Consulting services',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: `${site.url}/services/${s.slug}` })),
+}];
+---
+<Base
+  title="HR Consulting Services for Startups"
+  description="Leadership development, recruiting strategy, people programs, people operations and community: fractional HR and DEI services for growing companies."
+  path="/services"
+  schema={schema}
+>
+  <section class="container page-hero">
+    <div class="eyebrow">Services</div>
+    <h1>Our Services</h1>
+    <p class="lead">{site.tagline}</p>
+  </section>
+
+  <section class="container" style="padding-bottom:var(--section)">
+    <div style="display:grid;gap:32px">
+      {services.map((s, i) => (
+        <article class="card" style="background:#fff;border:1px solid #e4e0d6;padding:40px">
+          <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:24px" class="svc-row">
+            <div style="grid-column:1 / span 5">
+              <span class="num" style="font-family:var(--serif);font-style:italic;font-size:26px;color:var(--leaf)">{String(i + 1).padStart(2, '0')}</span>
+              <h2 style="font-size:40px;margin:8px 0 16px"><a href={`/services/${s.slug}`} style="text-decoration:none;color:inherit">{s.name}</a></h2>
+              <p class="copy">{s.description}</p>
+              <a class="btn btn-outline" href={`/services/${s.slug}`}>Explore {s.name}</a>
+            </div>
+            <div style="grid-column:7 / span 6">
+              <p class="eyebrow" style="margin-bottom:12px">Example deliverables</p>
+              <ul class="list-check" style="--x:0">
+                {s.deliverables.map((d) => <li style="background:var(--paper)">{d}</li>)}
+              </ul>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <CtaBand text="Send an email, and let’s make some HR magic happen!" />
+</Base>
+<style>
+  @media (max-width: 1024px) { .svc-row > div { grid-column: 1 / -1 !important; } }
+</style>

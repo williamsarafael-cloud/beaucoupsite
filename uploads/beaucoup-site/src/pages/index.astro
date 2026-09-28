@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { Image } from 'astro:assets';
+import { site, differentiators, capabilities, services, founder } from '../data/site';
+
+// Optional photos: drop files into src/assets/photos (hero.jpg, rafael.jpg) and src/assets/partners (any logo).
+const photos = import.meta.glob('/src/assets/photos/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const partnerLogos = import.meta.glob('/src/assets/partners/*.{jpg,jpeg,png,webp,svg}', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const pick = (name: string) => Object.entries(photos).find(([p]) => p.includes('/' + name + '.'))?.[1];
+const hero = pick('hero');
+const rafael = pick('rafael');
+const partners = Object.values(partnerLogos);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: site.name,
+    url: site.url,
+    logo: `${site.url}/images/logo.png`,
+    image: `${site.url}/og-image.png`,
+    description: 'Fractional HR and DEI consulting for startups and high-growth companies: leadership development, recruiting strategy, people programs and people operations.',
+    telephone: '+1-404-938-9214',
+    email: site.email,
+    sameAs: [site.linkedin],
+    founder: { '@type': 'Person', name: 'Rafael Williams', jobTitle: 'Founder' },
+    knowsAbout: services.map((s) => s.name),
+  },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url },
+];
+---
+<Base
+  title="Fractional HR & DEI Consulting for Startups"
+  description="Beaucoup Consulting helps startups and mid-sized companies build strong teams and cultures through leadership, recruiting, people programs and operations."
+  path="/"
+  schema={schema}
+>
+  <section class="container hero">
+    <div>
+      <div class="eyebrow">{site.eyebrow}</div>
+      <h1>Why Beaucoup? Because You Deserve More!</h1>
+      <p class="lead">{site.tagline}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/contact">Let’s Collaborate</a>
+        <a class="btn btn-outline" href="/services">Our Services</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden={hero ? undefined : 'true'}>
+      {hero ? (
+        <Image class="photo" src={hero} alt="Beaucoup Consulting team collaborating" widths={[600, 900, 1200]} sizes="(max-width: 1024px) 100vw, 50vw" loading="eager" />
+      ) : (
+        <>
+          <span class="c1"></span><span class="c2"></span>
+          <img class="mark" src="/favicon.png" alt="" width="96" height="96" />
+        </>
+      )}
+    </div>
+  </section>
+
+  <section class="container section" style="padding-top:40px" id="about">
+    <div class="split">
+      <h2 class="a">What Drives Us</h2>
+      <div class="b">
+        <p>At Beaucoup Consulting, we know that growing companies have unique needs and big dreams. You’re scaling fast, facing new challenges, and redefining what success looks like every day. That’s where we come in.</p>
+        <p>“Beaucoup” means “a lot,” and that’s exactly what we bring to the table: a lot of passion, a lot of expertise, and a lot of commitment to helping you build an exceptional team and culture. We’re not your average HR consultants; we’re your growth partners, here to help you navigate the twists and turns of talent management, culture development, and compliance so you can focus on what matters most—building your business.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mint section">
+    <div class="container">
+      <div class="intro">
+        <h2>What Makes Us Different?</h2>
+        <p class="copy">Startups and mid-sized companies need more than cookie-cutter solutions. You need a partner who understands the unique challenges of scaling a business while keeping the team motivated, engaged, and aligned with your vision. That’s where Beaucoup Consulting shines.</p>
+      </div>
+      <div class="cards-2">
+        {differentiators.map((d) => (
+          <div class="card"><h3>{d.title}</h3><p>{d.text}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="dark section on-dark" id="services">
+    <div class="container">
+      <h2>Our Services</h2>
+      <div class="svc-grid">
+        {services.map((s, i) => (
+          <a class="svc" href={`/services/${s.slug}`}>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="name">{s.name}</span>
+            <p>{s.short}</p>
+          </a>
+        ))}
+        <a class="svc svc-more" href="/services">Learn More →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="caps">
+      {capabilities.map((c) => (
+        <div><div class="dot"></div><h3>{c.title}</h3><p>{c.text}</p></div>
+      ))}
+    </div>
+    {partners.length > 0 && (
+      <div class="partners">
+        <div class="eyebrow">Partners</div>
+        {partners.map((p) => <Image src={p} alt="Partner logo" height={72} />)}
+      </div>
+    )}
+  </section>
+
+  <section class="founder section">
+    <div class="container founder-grid">
+      <div class="founder-photo">
+        {rafael && <Image src={rafael} alt="Rafael Williams, founder of Beaucoup Consulting" widths={[400, 700]} sizes="(max-width: 720px) 300px, 33vw" />}
+      </div>
+      <div class="founder-text">
+        <div class="eyebrow">Founder</div>
+        <h2>{founder.name}</h2>
+        <p class="copy">{founder.bio[0]}</p>
+        <a class="btn btn-outline" href="/about/rafael-williams">Read Rafael’s story</a>
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+</Base>

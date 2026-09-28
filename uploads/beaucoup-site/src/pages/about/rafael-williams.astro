@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { Image } from 'astro:assets';
+import { founder, site } from '../../data/site';
+const photos = import.meta.glob('/src/assets/photos/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const rafael = Object.entries(photos).find(([p]) => p.includes('/rafael.'))?.[1];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Person', name: 'Rafael A. Williams', honorificSuffix: 'MJur', jobTitle: 'Founder',
+  worksFor: { '@type': 'Organization', name: site.name, url: site.url },
+  url: `${site.url}/about/rafael-williams`, sameAs: [site.linkedin],
+  description: founder.bio[0],
+}];
+---
+<Base
+  title="Rafael Williams, MJur, Founder"
+  description="Rafael A. Williams is an HR leader with over ten years in people operations and talent strategy, with experience at Redfin, Twitter and Microsoft."
+  path="/about/rafael-williams"
+  ogType="article"
+  schema={schema}
+>
+  <section class="container page-hero">
+    <p class="crumbs"><a href="/about">About</a> / Rafael Williams</p>
+    <div class="founder-grid" style="margin-top:24px">
+      <div class="founder-photo">
+        {rafael && <Image src={rafael} alt="Rafael Williams, founder of Beaucoup Consulting" widths={[400, 700]} sizes="(max-width: 720px) 300px, 33vw" loading="eager" />}
+      </div>
+      <div class="founder-text">
+        <div class="eyebrow">{site.founderTitle}</div>
+        <h1 style="margin-top:12px">{founder.name}</h1>
+      </div>
+    </div>
+  </section>
+  <section class="container section" style="padding-top:0">
+    <div class="prose">
+      {founder.bio.map((p) => <p class="copy">{p}</p>)}
+      <p><a href={site.linkedin} rel="noopener" target="_blank">Beaucoup Consulting on LinkedIn</a></p>
+    </div>
+  </section>
+  <CtaBand />
+</Base>

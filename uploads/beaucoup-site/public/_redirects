@@ -1,0 +1,9 @@
+# Cloudflare Pages redirects. Old Wix paths -> new URLs (harmless if never used on this domain).
+/our-work                     /                          301
+/about-1                      /about                     301
+/rafael-willams               /about/rafael-williams     301
+/beaucoup-consultin-2/our-work        /                  301
+/beaucoup-consultin-2/about-1         /about             301
+/beaucoup-consultin-2/services        /services          301
+/beaucoup-consultin-2/rafael-willams  /about/rafael-williams 301
+/beaucoup-consultin-2                 /                  301

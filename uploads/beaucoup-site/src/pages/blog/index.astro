@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).filter((p) => !p.data.draft).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+<Base
+  title="Insights on HR for Startups"
+  description="Practical insights on HR, culture, recruiting and people operations for startups and high-growth companies from Beaucoup Consulting."
+  path="/blog"
+  noindex={posts.length === 0}
+>
+  <section class="container page-hero">
+    <div class="eyebrow">Insights</div>
+    <h1>Insights</h1>
+  </section>
+  <section class="container section" style="padding-top:0">
+    {posts.length === 0 ? <p class="copy">New articles are coming soon.</p> : (
+      <div class="post-list">
+        {posts.map((p) => (
+          <a class="post-card" href={`/blog/${p.id}`}>
+            <time datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+            <h2>{p.data.title}</h2>
+            <p style="margin:0">{p.data.description}</p>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

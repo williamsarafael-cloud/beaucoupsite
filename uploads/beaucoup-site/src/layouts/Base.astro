@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { site, nav } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+  fullTitle?: boolean;
+  ogType?: 'website' | 'article';
+  schema?: object[];
+}
+const { title, description, path = Astro.url.pathname, noindex = false, fullTitle = false, ogType = 'website', schema = [] } = Astro.props;
+
+const pageTitle = fullTitle ? title : `${title} | ${site.name}`;
+const canonical = new URL(path === '/' ? '/' : path.replace(/\/$/, ''), site.url).href;
+const ogImage = new URL('/og-image.png', site.url).href;
+
+const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+const links = [...nav, ...(posts.length ? [{ label: 'Insights', href: '/blog' }] : [])];
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => current === href || current.startsWith(href + '/');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#005e35" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1200" />
+    <meta property="og:image:alt" content="Beaucoup Consulting logo" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <div class="site">
+      <a class="skip" href="#main">Skip to content</a>
+      <header class="site-header">
+        <div class="container">
+          <a class="brand" href="/" aria-label="Beaucoup Consulting, home">
+            <img src="/images/logo.png" alt="Beaucoup Consulting" width="915" height="333" />
+          </a>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+          <nav class="nav" id="nav" aria-label="Main">
+            {links.map((l) => <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a>)}
+            <a class="btn btn-primary" href="/contact" aria-current={current === '/contact' ? 'page' : undefined}>Let’s Collaborate</a>
+          </nav>
+        </div>
+      </header>
+      <main id="main">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="container">
+          <a href="/" aria-label="Beaucoup Consulting, home"><img src="/images/logo-reversed.png" alt="Beaucoup Consulting" width="915" height="333" /></a>
+          <div class="footer-links">
+            <a href={site.linkedin} rel="noopener" target="_blank">LinkedIn</a>
+            <a href="/privacy">Privacy</a>
+          </div>
+          <p class="copyright">© {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+    <script is:inline>
+      var t = document.querySelector('.menu-toggle'), n = document.getElementById('nav');
+      t.addEventListener('click', function () {
+        var open = n.classList.toggle('open');
+        t.setAttribute('aria-expanded', open ? 'true' : 'false');
+        t.textContent = open ? 'Close' : 'Menu';
+      });
+    </script>
+  </body>
+</html>

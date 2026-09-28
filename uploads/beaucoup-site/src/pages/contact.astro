@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { site } from '../data/site';
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact Beaucoup Consulting', url: `${site.url}/contact`,
+}];
+---
+<Base
+  title="Contact Us About Your HR Needs"
+  description="Tell us about your team and your goals. Send an inquiry to Beaucoup Consulting and let’s talk about HR strategy for your startup or growing company."
+  path="/contact"
+  schema={schema}
+>
+  <section class="container page-hero" style="padding-bottom:0">
+    <div class="eyebrow">Contact</div>
+    <h1>Let’s Collaborate</h1>
+  </section>
+  <ContactSection />
+</Base>

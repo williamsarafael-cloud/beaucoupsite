@@ -1,0 +1,28 @@
+---
+// Sends inquiries by email through Web3Forms (free). Set PUBLIC_WEB3FORMS_KEY in Cloudflare Pages
+// (Settings > Environment variables). See README for the 2-minute setup.
+import { site } from '../data/site';
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+{!key && (
+  <p class="form-warning" role="note">The form is not connected yet. Email <a href={`mailto:${site.email}`}>{site.email}</a> in the meantime.</p>
+)}
+<form class="form" action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value={key} />
+  <input type="hidden" name="subject" value="New inquiry from beaucoupconsult.com" />
+  <input type="hidden" name="from_name" value="Beaucoup Consulting website" />
+  <input type="hidden" name="redirect" value="https://beaucoupconsult.com/thanks" />
+  <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <div class="row">
+    <label>First name *<input type="text" name="first_name" autocomplete="given-name" required /></label>
+    <label>Last name *<input type="text" name="last_name" autocomplete="family-name" required /></label>
+  </div>
+  <div class="row">
+    <label>Company name<input type="text" name="company" autocomplete="organization" /></label>
+    <label>Position<input type="text" name="position" autocomplete="organization-title" /></label>
+  </div>
+  <label>Email *<input type="email" name="email" autocomplete="email" required /></label>
+  <label>Write a message<textarea name="message"></textarea></label>
+  <button class="btn btn-primary" type="submit" disabled={!key}>Submit</button>
+  <small>We use your details only to reply to your inquiry. <a href="/privacy">Privacy</a></small>
+</form>

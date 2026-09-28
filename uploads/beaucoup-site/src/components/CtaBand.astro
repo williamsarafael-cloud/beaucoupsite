@@ -1,0 +1,11 @@
+---
+// Sends visitors to the contact form (captures company and role) instead of opening an email app.
+const { title = 'Ready to Transform Your Workplace?', text = 'Send an email, and let’s make some HR magic happen!' } = Astro.props;
+---
+<section class="cta-band section on-dark">
+  <div class="container">
+    <h2>{title}</h2>
+    <p class="copy">{text}</p>
+    <a class="btn btn-lime" href="/contact">Let’s Collaborate</a>
+  </div>
+</section>

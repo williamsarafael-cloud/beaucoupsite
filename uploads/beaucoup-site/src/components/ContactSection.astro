@@ -1,0 +1,20 @@
+---
+import ContactForm from './ContactForm.astro';
+import { site } from '../data/site';
+const { headingLevel = 'h2' } = Astro.props;
+---
+<section class="section container" id="contact">
+  <div class="contact-grid">
+    <div>
+      <h2>Ready to Transform Your Workplace?</h2>
+      <p class="copy">Let’s turn your HR challenges into opportunities for growth and success! Whether you’re a startup finding your footing or a mid-size company looking to scale, Beaucoup Consulting is here to help.</p>
+      <p class="copy">Send us an inquiry, and let’s make some HR magic happen!</p>
+      <div class="contact-details">
+        <strong>Contact Us</strong>
+        <a href={`tel:${site.phoneHref}`}>{site.phone}</a><br />
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+    <ContactForm />
+  </div>
+</section>
